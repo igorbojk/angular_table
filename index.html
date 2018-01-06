@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Angular table</title>
     <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="main.bundle.css">
     <script src="../node_modules/angular/angular.min.js"></script>
     <script src="app.js"></script>
@@ -14,8 +15,38 @@
 
 
 </head>
-<body ng-controller="LayoutCtrl as app">
-	<om-table> </om-table>	
+<body ng-controller="LayoutCtrl as vm">
+	<div class="table-container">
+		<div class="head-block">
+			<div class="total-block" ng-bind="'Total: ' + vm.total"></div>
+			<div class="search-block">
+				<input ng-model="searchStr" placeholder="Search" ng-disabled="vm.isEditNow">
+			</div>	
+		</div>
+		<div class="table-block">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th ng-repeat="title in vm.tableHeadTitles">
+							<a href="#" ng-click="vm.setSortType(title)" ng-bind="title"></a>
+						</th>
+					</tr>		
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in vm.tableData | orderBy:vm.sortBy:sortReverse | filter:searchStr " ng-class="{edit: vm.isEditNow}">
+						<td ng-repeat="(key, value) in item" ng-class="{'edited-item':  item.id == vm.currentEditItem.id && vm.currentEditKey == key}" ng-if="key !== 'edit'">
+							<a href="#" ng-click="vm.editItem(item, key)" ng-bind="value"></a>
+							<div class="edit-block" ng-if="item.id == vm.currentEditItem.id && vm.currentEditKey == key">
+								<input type="{{vm.inputType}}" ng-model="vm.currentEditItem[key]">
+								<span class="icon-floppy-disk edit-btn" ng-click="vm.saveField(item, key)"></span>
+								<span class="icon-cross edit-btn" ng-click="vm.cancel(item)"></span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </body>
    
 </html>

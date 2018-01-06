@@ -73,17 +73,9 @@
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__controllers_layout_controller__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_index__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_index__ = __webpack_require__(2);
 
 
-
-
-
-let modules = [
-	__WEBPACK_IMPORTED_MODULE_1__services_index__["a" /* default */],
-	__WEBPACK_IMPORTED_MODULE_2__components_index__["a" /* default */]
-]
+let modules = []
 
 let myApp = angular.module('myApp', modules)
 	.controller('LayoutCtrl', __WEBPACK_IMPORTED_MODULE_0__controllers_layout_controller__["a" /* default */])
@@ -96,95 +88,15 @@ let myApp = angular.module('myApp', modules)
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__om_table_om_table_component__ = __webpack_require__(3);
-
-
-/* harmony default export */ __webpack_exports__["a"] = (angular.module('myApp.components', [__WEBPACK_IMPORTED_MODULE_0__om_table_om_table_component__["a" /* default */]])
-	.name);
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-class OmTableController {
-
-    constructor(tableDataService) {
-        this.tableDataService = tableDataService;
-        this.tableHeadTitles = this.tableDataService.tableHeadTitles;
-    }   
-
-    $onInit() {
-        this.tableDataService.getTableData();
-    }
-
-    get tableData(){
-        return this.tableDataService.tableData;
-    }
-  
-    get total(){
-        let total = 0;
-        this.tableData.forEach((i)=>{
-            total += i.currency 
-        });
-        return total;
-    }
-}
-
-OmTableController.$inject = ['tableDataService'];
-
-/* harmony default export */ __webpack_exports__["a"] = (angular.module('app.components.om-table', [])
-    .component('omTable', {
-        templateUrl: '../app/components/om-table/om-table.template.html',
-        controller: OmTableController,
-        controllerAs: 'vm',
-        bindings: {
-        }
-    })
-    .name);
-
-
-
-
-/***/ }),
+/* 2 */,
+/* 3 */,
 /* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 class LayoutController { 
-    constructor(){
-    	this.test = 'test';
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = LayoutController;
-
-
-LayoutController.$inject = [];
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__table_data_service__ = __webpack_require__(6);
-
-/* harmony default export */ __webpack_exports__["a"] = (angular.module('myApp.services', [])
-    .service('tableDataService', __WEBPACK_IMPORTED_MODULE_0__table_data_service__["a" /* default */])
-	.name);
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-class tableDataService {
-    constructor($http){
+    constructor($timeout, $http){
+    	this.$timeout = $timeout;
     	this.$http = $http;
     	this.tableHeadTitles = [
     		'id',
@@ -192,9 +104,16 @@ class tableDataService {
     		'location',
     		'currency',
     	]
-        this.tableData = [];
+    	this.tableData = [];
+    	this.isEditNow = false;
+    	this.currentEditItem = null;
+    	this.currentEditKey = null;
+    	this.sortBy = null;
     }
 
+    $onInit() {
+        this.getTableData();
+    }
     getTableData(){
     	this.$http({
     		method: 'GET',
@@ -205,15 +124,56 @@ class tableDataService {
 		});
     }
 
+    get total(){
+        let total = 0;
+        this.tableData.forEach((i)=>{
+            total += i.currency 
+        });
+        return total;
+    }
 
+    editItem(item, key){
+    	if(key == 'currency'){
+    		this.inputType = 'number';
+    	}else{
+    		this.inputType = 'string';
+    	}
+    	item.edit = true;
+    	this.isEditNow = true;
+    	this.currentEditItem = angular.copy(item);
+    	this.currentEditKey = key;
+    }
+
+    cancel(item){
+    	item.edit = false;
+    	this.resetEditSettings();
+    }
+    saveField(item, key){
+    	item[key] = this.currentEditItem[key];
+    	item.edit = false;
+    	this.resetEditSettings();
+    }
+
+    resetEditSettings(){
+    	this.isEditNow = false;
+    	this.currentEditItem = null;
+    	this.currentEditKey = null;
+    }
+    setSortType(type){
+    	if(type == 'id'){
+    		return;
+    	}
+    	this.sortBy = type;
+    }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = tableDataService;
+/* harmony export (immutable) */ __webpack_exports__["a"] = LayoutController;
 
 
-tableDataService.$inject = ['$http'];
-
+LayoutController.$inject = ['$timeout', '$http'];
 
 /***/ }),
+/* 5 */,
+/* 6 */,
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
