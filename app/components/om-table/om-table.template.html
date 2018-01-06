@@ -1,2 +1,18 @@
-<p ng-bind="vm.test"></p>
-<p>тут какой-то текст</p>
+<div class="total-block" ng-bind="'Total: ' + vm.total"></div>
+
+<div class="search-block">
+	<input ng-model="searchStr" placeholder="Search">
+</div>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th ng-repeat="title in vm.tableHeadTitles" ng-bind="title"></th>
+		</tr>		
+	</thead>
+	<tbody>
+		<tr ng-repeat="item in vm.tableData | filter:searchStr">
+			<td ng-repeat="(key, value) in item" ng-bind="value"></td>
+		</tr>
+	</tbody>
+</table>

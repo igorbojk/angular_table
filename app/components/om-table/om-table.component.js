@@ -3,15 +3,24 @@ class OmTableController {
 
     constructor(tableDataService) {
         this.tableDataService = tableDataService;
+        this.tableHeadTitles = this.tableDataService.tableHeadTitles;
     }   
 
     $onInit() {
+        this.tableDataService.getTableData();
     }
 
-    get test(){
-        return this.tableDataService.test;
+    get tableData(){
+        return this.tableDataService.tableData;
     }
   
+    get total(){
+        let total = 0;
+        this.tableData.forEach((i)=>{
+            total += i.currency 
+        });
+        return total;
+    }
 }
 
 OmTableController.$inject = ['tableDataService'];

@@ -117,15 +117,24 @@ class OmTableController {
 
     constructor(tableDataService) {
         this.tableDataService = tableDataService;
+        this.tableHeadTitles = this.tableDataService.tableHeadTitles;
     }   
 
     $onInit() {
+        this.tableDataService.getTableData();
     }
 
-    get test(){
-        return this.tableDataService.test;
+    get tableData(){
+        return this.tableDataService.tableData;
     }
   
+    get total(){
+        let total = 0;
+        this.tableData.forEach((i)=>{
+            total += i.currency 
+        });
+        return total;
+    }
 }
 
 OmTableController.$inject = ['tableDataService'];
@@ -175,14 +184,33 @@ LayoutController.$inject = [];
 
 "use strict";
 class tableDataService {
-    constructor(){
-        this.test = 'test-everest';
+    constructor($http){
+    	this.$http = $http;
+    	this.tableHeadTitles = [
+    		'id',
+    		'name',
+    		'location',
+    		'currency',
+    	]
+        this.tableData = [];
     }
+
+    getTableData(){
+    	this.$http({
+    		method: 'GET',
+            url: 'test.json',
+    	}) 
+		.then(response => {
+		    this.tableData = response.data;
+		});
+    }
+
+
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = tableDataService;
 
 
-tableDataService.$inject = [];
+tableDataService.$inject = ['$http'];
 
 
 /***/ }),
