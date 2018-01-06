@@ -34,9 +34,9 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="item in vm.tableData | orderBy:vm.sortBy:sortReverse | filter:searchStr " ng-class="{edit: vm.isEditNow}">
-						<td ng-repeat="(key, value) in item" ng-class="{'edited-item':  item.id == vm.currentEditItem.id && vm.currentEditKey == key}" ng-if="key !== 'edit'">
+						<td ng-repeat="(key, value) in item" ng-class="{'edited-item':  item.edit && vm.currentEditKey == key}" ng-if="key !== 'edit'">
 							<a href="#" ng-click="vm.editItem(item, key)" ng-bind="value"></a>
-							<div class="edit-block" ng-if="item.id == vm.currentEditItem.id && vm.currentEditKey == key">
+							<div class="edit-block" ng-if="item.edit && vm.currentEditKey == key">
 								<input type="{{vm.inputType}}" ng-model="vm.currentEditItem[key]">
 								<span class="icon-floppy-disk edit-btn" ng-click="vm.saveField(item, key)"></span>
 								<span class="icon-cross edit-btn" ng-click="vm.cancel(item)"></span>
