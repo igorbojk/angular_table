@@ -4,4 +4,4 @@
  You can sort, search and change data in table.
 
 # DEMO
-http://igorbojk.kl.com.ua/angular_table/
+https://igorbojk.com.ua/examples/angular-table/
